@@ -4,7 +4,8 @@ module MiniMaxTAD
     MiniMaxTree,
     generaArbolMiniMax,
     generarArbolDeEstados,
-    mejorJugada
+    mejorJugada,
+    emptyTree
 ) where
 
 import Data.List (maximumBy, minimumBy)
@@ -14,6 +15,9 @@ data ArbolDeEstados a = N1 a [ArbolDeEstados a]
 
 data MiniMaxTree a = N2 Int a [MiniMaxTree a]
                     deriving (Eq, Show)
+
+emptyTree :: a -> MiniMaxTree a
+emptyTree s = (N2 0 s [])
 
 generarArbolDeEstados :: (Eq a) => a -> (a->[a]) -> (a -> (Bool, Int)) -> ArbolDeEstados a
 generarArbolDeEstados s hijos esEstadoFinal
