@@ -85,7 +85,7 @@ jugada :: Int -> Estado ->  Bool -> MiniMaxTree Estado-> IO ()
 jugada jugador estado esPrimera minimaxT = 
     do
         putStrLn "\n"
-        putStrLn $ "Turno del jugador " ++ conversionFichas jugador
+        putStrLn $ "Turno del jugador " ++ (conversionFichas.siguienteJugador) jugador
         putStrLn "\n"
         representarTablero estado
         putStrLn "\n"
@@ -123,7 +123,14 @@ modificaTablero :: Estado -> Int -> IO Estado
 modificaTablero s j = do
     r <- insertarDigito "Fila que desea marcar: "
     c <- insertarDigito "Columna que desea marcar: "
-    return $ setElem j (r,c) s
+    if  elem r [1..3] && elem c [1..3] && (getElem r c s) == 0
+        then
+            do
+                return $ setElem j (r,c) s
+    else
+        do
+            putStrLn "Error: No se puede escribir en esta casilla"
+            modificaTablero s j
     
 siguienteJugador :: Int -> Int
 siguienteJugador j = 0 - j

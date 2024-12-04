@@ -49,11 +49,17 @@ hijos s = concat (map (\x -> hijosAux x s) [0..8])
         
 hijosAux :: Int -> Estado -> [Estado]
 hijosAux i s 
-    |e  == 0 = [fromList 3 3 (replaceAt i 1 xs), fromList 3 3 (replaceAt i (-1) xs)]
+    |e  == 0 = [fromList 3 3 (replaceAt i (verTurno s) xs)]
     |otherwise = []
     where
         e = (toList s) !! i
         xs = toList s
+
+verTurno :: Estado -> Int
+verTurno s = if pos == neg then 1 else -1
+    where
+        pos = length (filter (==1) (toList s))
+        neg = length (filter (==(-1)) (toList s))
 
 replaceAt :: Int -> Int -> [Int] -> [Int]
 replaceAt i newVal xs = take i xs ++ [newVal] ++ drop (i + 1) xs
