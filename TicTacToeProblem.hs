@@ -17,10 +17,14 @@ esEstadoFinal :: Estado -> (Bool, Int)
 esEstadoFinal s
     | fst c = c
     | fst d = d
+    | esCompleto s = (True, 0)
     | otherwise = (False, 0)
     where 
         c = comprobarFilasColumnas s 1
         d = comprobarDiagonales s
+
+esCompleto :: Estado -> Bool
+esCompleto s = all (/=0) (toList s) 
 
 comprobarFilasColumnas :: Estado -> Int -> (Bool, Int)
 comprobarFilasColumnas s i

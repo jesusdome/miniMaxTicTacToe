@@ -1,4 +1,4 @@
--- TO DO: Optimizar la función hijos y tener en cuenta que un tablero completo tmb es un tablero final.
+-- TO DO: Optimizar la función hijos.
 
 import MiniMaxTAD
 import Data.Char
@@ -91,7 +91,11 @@ jugada jugador estado esPrimera minimaxT =
         putStrLn "\n"
         if (fst.esEstadoFinal) estado
             then
-                putStrLn $ "¡¡¡¡¡¡ HA GANADO EL JUGADOR " ++ (conversionFichas.siguienteJugador) jugador ++ "!!!!!!"
+                if ((snd.esEstadoFinal) estado) /= 0
+                    then
+                        putStrLn $ "¡¡¡¡¡¡ HA GANADO EL JUGADOR " ++ (conversionFichas.siguienteJugador) jugador ++ "!!!!!!"
+                else
+                    putStrLn "Habeis empatado :("
         else
             if jugador == 1
                 then
@@ -120,8 +124,6 @@ modificaTablero s j = do
     r <- insertarDigito "Fila que desea marcar: "
     c <- insertarDigito "Columna que desea marcar: "
     return $ setElem j (r,c) s
-
-
     
 siguienteJugador :: Int -> Int
 siguienteJugador j = 0 - j
