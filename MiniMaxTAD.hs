@@ -18,13 +18,14 @@ data MiniMaxTree a = N2 Int a [MiniMaxTree a]
 
 emptyTree :: a -> MiniMaxTree a
 emptyTree s = (N2 0 s [])
-
+{-
 generarArbolDeEstados :: (Eq a) => a -> (a->[a]) -> (a -> (Bool, Int)) -> ArbolDeEstados a
 generarArbolDeEstados s hijos esEstadoFinal
     | b = (N1 s [])
     | otherwise = (N1 s (map (\x -> generarArbolDeEstados x hijos esEstadoFinal) (hijos s) ))
     where
         (b, p) = esEstadoFinal s
+
 
 generaArbolMiniMax :: (Eq a) => ArbolDeEstados a -> Bool -> (a -> (Bool, Int)) -> MiniMaxTree a
 generaArbolMiniMax (N1 s []) _ esEstadoFinal = N2 (snd (esEstadoFinal s)) s []
@@ -34,6 +35,29 @@ generaArbolMiniMax (N1 s xs) b esEstadoFinal =
             N2 (maximum (map (\x -> let N2 v _ _ = generaArbolMiniMax x False esEstadoFinal in v) xs)) s (map (\x -> generaArbolMiniMax x False esEstadoFinal) xs)
         else
             N2 (minimum (map (\x -> let N2 v _ _ = generaArbolMiniMax x True esEstadoFinal in v) xs)) s (map (\x -> generaArbolMiniMax x True esEstadoFinal) xs)
+-}
+
+generarArbolDeEstados :: (Eq a) => a -> (a -> [a]) -> (a -> Int -> (Bool, Int)) -> Int -> ArbolDeEstados a
+generarArbolDeEstados s hijos esEstadoFinal n
+    | b = (N1 s [])
+    | otherwise = (N1 s (map (\x -> generarArbolDeEstados x hijos esEstadoFinal n) (hijos s)))
+    where
+        (b, p) = esEstadoFinal s n
+
+generaArbolMiniMax :: (Eq a) => ArbolDeEstados a -> Bool -> (a -> Int -> (Bool, Int)) -> Int -> MiniMaxTree a
+generaArbolMiniMax (N1 s []) _ esEstadoFinal n = N2 (snd (esEstadoFinal s n)) s []
+generaArbolMiniMax (N1 s xs) b esEstadoFinal n =
+    if b
+        then
+            N2 (maximum (map (\x -> let N2 v _ _ = generaArbolMiniMax x False esEstadoFinal n in v) xs)) 
+               s 
+               (map (\x -> generaArbolMiniMax x False esEstadoFinal n) xs)
+        else
+            N2 (minimum (map (\x -> let N2 v _ _ = generaArbolMiniMax x True esEstadoFinal n in v) xs)) 
+               s 
+               (map (\x -> generaArbolMiniMax x True esEstadoFinal n) xs)
+
+
 
 mejorJugada :: (Eq a) => MiniMaxTree a -> a -> Bool -> a
 mejorJugada (N2 _ s xs) es b
@@ -53,4 +77,3 @@ containsEstado :: (Eq a) => a -> MiniMaxTree a -> Bool
 containsEstado es (N2 _ s xs)
     | s == es  = True
     | otherwise = any (containsEstado es) xs
-
